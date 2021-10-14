@@ -1,0 +1,143 @@
+.sms-container {
+	overflow: hidden;
+	overflow-x: auto;
+}
+
+.table.sms {
+	margin-bottom: 10px;
+}
+
+.sms .img img {
+	width: 70px;
+	height: 70px;
+}
+
+.sms .message {
+	position: relative;
+
+	&:before {
+		content: ' ';
+		position: absolute;
+		width: 0;
+		height: 0;
+		top: 0;
+		left: 0;
+		border: 6px solid;
+		border-color: #fff #fff transparent transparent;
+	}
+
+	& > div {
+		border: 0;
+		padding: 12px;
+		box-shadow: 2px 2px 1px -1px rgba(0, 0, 0, 0.15);
+		display: inline-block;
+		background-color: #fff;
+		margin-left: 12px;
+		margin-right: 4px;
+
+		.figure {
+			max-width: 280px;
+			margin: 5px;
+		}
+	}
+}
+
+.sms.reverse {
+	.message {
+		text-align: right;
+
+		.blockquote p {
+			text-align: left;
+		}
+
+		&:before {
+			border: 0;
+		}
+
+		& > div {
+			border-bottom: 12px solid #e2fffd;
+			border-right: 12px solid transparent;
+			box-shadow: -2px 2px 1px -1px rgba(0, 0, 0, 0.15);
+			padding-bottom: 0;
+			margin-left: 2px;
+			margin-right: 0;
+			background-color: #e2fffd;
+			background-clip: padding-box;
+		}
+	}
+}
+
+.td.img {
+	width: 70px;
+	vertical-align: top;
+}
+
+.reverse .td.img {
+	vertical-align: bottom;
+}
+
+.new .sms .message > div {
+	background-color: #edffd7;
+}
+
+.new .sms .message:before {
+	border-color: #edffd7 #edffd7 transparent transparent;
+}
+
+.sms.other .message > div {
+	border-bottom: 12px solid #e2fffd;
+	background-color: #e2fffd;
+}
+
+.message blockquote p:empty {
+	display: none;
+}
+
+.message-item {
+	position: relative;
+}
+
+.caret {
+	vertical-align: middle;
+	display: inline-block;
+	border-top: 4px dashed;
+	border-right: 4px solid transparent;
+	border-left: 4px solid transparent;
+}
+
+.collapsed .caret {
+	border-bottom: 4px solid rgba(0, 0, 0, 0);
+	border-top: 4px solid rgba(0, 0, 0, 0);
+	border-left: 4px solid;
+}
+
+.message-item.opened .caret {
+	border-top: 0;
+	border-left: 4px solid rgba(0, 0, 0, 0);
+	border-right: 4px solid rgba(0, 0, 0, 0);
+	border-bottom: 4px solid;
+}
+
+.message-delete-form, .reply-delete-form {
+	display: inline-block;
+}
+
+@media screen and (max-width: map-get($grid-breakpoints, 'sm')) {
+	.sms .img img {
+		width: 50px;
+		height: 50px;
+	}
+
+	.td.img {
+		width: 50px;
+	}
+}
+
+// Embed
+.sms {
+	.message {
+		.embed-responsive {
+			min-width: 350px;
+		}
+	}
+}
