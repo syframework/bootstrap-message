@@ -1,10 +1,10 @@
 <?php
-namespace Sy\Bootstrap\Service\Message;
+namespace Sy\Bootstrap\Service;
 
 use Sy\Bootstrap\Lib\Upload;
 use Sy\Event\Event;
 
-class Received extends \Sy\Bootstrap\Service\Crud {
+class MessageReceived extends \Sy\Bootstrap\Service\Crud {
 
 	public function __construct() {
 		parent::__construct('messageReceived');
