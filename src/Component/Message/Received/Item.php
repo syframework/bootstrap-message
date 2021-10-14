@@ -80,15 +80,13 @@ class Item extends \Sy\Component\WebComponent {
 		}
 
 		// Share message button
-		if ($message['item_type'] !== 'reservation') {
-			$shareBtn = new \Sy\Bootstrap\Component\Share\Button(
-				url: PROJECT_URL . WEB_ROOT . \Sy\Bootstrap\Lib\Url::build('page', 'message', ['id' => $message['id']]),
-				size: 'sm',
-				title: 'Share this message',
-				width: 'auto'
-			);
-			$this->setComponent('SHARE_BTN', $shareBtn);
-		}
+		$shareBtn = new \Sy\Bootstrap\Component\Share\Button(
+			url: PROJECT_URL . WEB_ROOT . \Sy\Bootstrap\Lib\Url::build('page', 'message', ['id' => $message['id']]),
+			size: 'sm',
+			title: 'Share this message',
+			width: 'auto'
+		);
+		$this->setComponent('SHARE_BTN', $shareBtn);
 	}
 
 }
