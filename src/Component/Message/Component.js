@@ -16,7 +16,7 @@
 				if (result.status === 'ok') {
 					// Reset form
 					$('#new-msg-textarea').val('');
-					$('.picture-input-hidden').attr('value', '');
+					$('.sy-picture-input-hidden').val('');
 
 					$('#new-msg-modal').modal('hide');
 					$('#message-feed').load("{FEED_URL}", function () {

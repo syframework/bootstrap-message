@@ -11,9 +11,7 @@
 			function(result) {
 				if (result.status === 'ok') {
 					$('#reply-form-textarea-' + message_id).val('');
-					$('.picture-input-hidden').val('');
-					$('.picture-div').html('');
-					SyFormPicture.pictures = {};
+					$('.sy-picture-input-hidden').val('');
 					$('#message-' + message_id).removeClass('new');
 					$('#reply-feed-div-' + message_id + ' .feed-next-page-button').click();
 					$('#reply-nb-' + message_id).html(result.nb_reply);
