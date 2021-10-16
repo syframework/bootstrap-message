@@ -43,6 +43,9 @@ class Component extends \Sy\Component\WebComponent {
 		}
 
 		$this->addJsCode($js);
+
+		// Hack for the first message creation
+		$this->setComponent('SHARE_BTN', new \Sy\Bootstrap\Component\Share\Button('Share'));
 	}
 
 }
