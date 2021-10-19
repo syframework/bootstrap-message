@@ -50,7 +50,7 @@ class DeleteForm extends \Sy\Bootstrap\Component\Form {
 			$this->logWarning($e);
 			$result = ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
 			echo json_encode($result);
-		} catch(\Sy\Bootstrap\Service\Crud\Exception $e) {
+		} catch(\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
 			$result = ['status' => 'ko', 'message' => $this->_('Error')];
 			echo json_encode($result);

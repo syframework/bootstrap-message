@@ -156,7 +156,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 			$this->logWarning($e);
 			$this->setError(is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error'));
 			$this->fillOnError();
-		} catch(\Sy\Bootstrap\Service\Crud\Exception $e) {
+		} catch(\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
 			$this->setError($this->_('Error'));
 			$this->fillOnError();

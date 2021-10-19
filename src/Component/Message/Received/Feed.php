@@ -27,7 +27,7 @@ class Feed extends \Sy\Bootstrap\Component\Feed {
 			$service = \Project\Service\Container::getInstance();
 			$nb = $service->messageReceived->count(['last' => $n, 'item_id' => $this->itemId, 'item_type' => $this->itemType]);
 			return $nb <= 10;
-		} catch (\Sy\Bootstrap\Service\Crud\Exception $e) {
+		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logError('SQL Error');
 			return true;
 		}

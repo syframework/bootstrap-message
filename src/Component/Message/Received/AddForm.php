@@ -19,7 +19,6 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			'id'    => 'new-msg-form',
 			'action'=> \Sy\Bootstrap\Lib\Url::build('api', 'message/create')
 		]);
-		$this->addHidden(['name' => 'action', 'value' => 'create']); // to catch action in Api
 		$this->addHidden(['name' => 'item_id', 'value' => $this->itemId]);
 		$this->addHidden(['name' => 'item_type', 'value' => $this->itemType]);
 
@@ -35,19 +34,6 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			'required'    => 'required',
 			'maxlength'   => 2048,
 			'placeholder' => 'Your message'
-		], [
-			'validator' => function($value) {
-				$l = strlen($value);
-				if ($l >= 2 and $l <= 2048) return true;
-				$m = 'max';
-				$n = 2048;
-				if ($l <= 2048) {
-					$m = 'min';
-					$n = 2;
-				}
-				$this->setError(sprintf($this->_("Text $m length of %d characters"), $n));
-				return false;
-			}
 		]);
 
 		$div = $this->addDiv(['class' => 'clearfix']);
@@ -80,7 +66,7 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 
 			$user = $service->user->getCurrentUser();
 
-			if (!$user->isConnected()) throw new \Sy\Bootstrap\Service\Crud\Exception();
+			if (!$user->isConnected()) throw new \Sy\Db\MySql\Exception();
 
 			// Create message
 			$userId = $user->id;
@@ -128,7 +114,7 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			$this->logWarning($e);
 			$result = ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
 			echo json_encode($result);
-		} catch(\Sy\Bootstrap\Service\Crud\Exception $e) {
+		} catch(\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
 			$result = ['status' => 'ko', 'message' => $this->_('Error')];
 			echo json_encode($result);

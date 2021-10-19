@@ -36,7 +36,7 @@ class Page extends \Sy\Component\WebComponent {
 		$service = \Project\Service\Container::getInstance();
 		try {
 			$messages = $service->messageReceived->retrieveAll(['last' => $this->page, 'item_id' => $this->itemId, 'item_type' => $this->itemType]);
-		} catch (\Sy\Bootstrap\Service\Crud\Exception $e) {
+		} catch (\Sy\Db\MySql\Exception $e) {
 			$messages = [];
 		}
 
