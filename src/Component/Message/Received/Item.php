@@ -67,7 +67,6 @@ class Item extends \Sy\Component\WebComponent {
 			'DATETIME'       => $date->timestamp(),
 			'NB_REPLY'       => $message['nb_reply'],
 			'NEW'            => ($message['nb_reply'] > 0 ? '' : 'new'),
-			'URL'            => \Sy\Bootstrap\Lib\Url::build('page', 'user', ['id' => $message['user_id']]),
 			'CMT_BTN_HIDDEN' => $this->opened ? 'd-none' : '',
 			'CMT_DIV_HIDDEN' => $this->opened ? '' : 'style="display:none"',
 		]);
