@@ -4,7 +4,7 @@ namespace Sy\Bootstrap\Application\Api;
 class Message extends \Sy\Bootstrap\Component\Api {
 
 	public function security() {
-		$service = \Sy\Bootstrap\Service\Container::getInstance();
+		$service = \Project\Service\Container::getInstance();
 		$user = $service->user->getCurrentUser();
 		if ($user->isConnected()) return;
 		$this->forbidden(['status' => 'ko', 'message' => $this->_('Session expired')]);
@@ -27,7 +27,7 @@ class Message extends \Sy\Bootstrap\Component\Api {
 	}
 
 	public function delete() {
-		$service = \Sy\Bootstrap\Service\Container::getInstance();
+		$service = \Project\Service\Container::getInstance();
 		$user = $service->user->getCurrentUser();
 		$message = $service->messageReceived->retrieve(['id' => $this->post('message_id')]);
 		if (!$user->hasPermission('message-delete') and $user->id !== $message['user_id']) $this->forbidden();
@@ -41,7 +41,7 @@ class Message extends \Sy\Bootstrap\Component\Api {
 	}
 
 	public function deleteReply() {
-		$service = \Sy\Bootstrap\Service\Container::getInstance();
+		$service = \Project\Service\Container::getInstance();
 		$user = $service->user->getCurrentUser();
 		$message = $service->messageReply->retrieve(['id' => $this->post('message_id')]);
 		if (!$user->hasPermission('message-delete') and $user->id !== $message['user_id']) $this->forbidden();
