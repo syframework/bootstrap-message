@@ -38,7 +38,7 @@ class Item extends \Sy\Component\WebComponent {
 
 		$this->setVars([
 			'ID'      => $message['id'],
-			'USER_IMG'=> \Sy\Bootstrap\Lib\Url::avatar($message['user_id']),
+			'USER_IMG'=> \Sy\Bootstrap\Lib\Url::avatar($message['user_email']),
 			'USER_ID' => $message['user_id'],
 			'MESSAGE' => \Sy\Bootstrap\Lib\Str::convert($message['message']),
 			'DATE'    => $date->humanTimeDiff(),
