@@ -58,7 +58,7 @@ class Item extends \Sy\Component\WebComponent {
 		$author = $this->_(\Sy\Bootstrap\Lib\Str::convertName($message['user_firstname'] . ' ' . $message['user_lastname']));
 		$this->setVars([
 			'ID'             => $message['id'],
-			'PROFILE_IMG_SRC'=> \Sy\Bootstrap\Lib\Url::avatar($message['user_id']),
+			'PROFILE_IMG_SRC'=> \Sy\Bootstrap\Lib\Url::avatar($message['user_email']),
 			'USER_ID'        => $message['user_id'],
 			'AUTHOR'         => $author,
 			'MESSAGE'        => \Sy\Bootstrap\Lib\Str::convert($message['message']),

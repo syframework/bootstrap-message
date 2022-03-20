@@ -35,7 +35,7 @@ class MessageReceived extends \Sy\Bootstrap\Db\Crud {
 				message.*,
 				COUNT(reply.id) AS nb_reply
 			FROM (
-				SELECT t_message_received.*, user.firstname AS user_firstname, user.lastname AS user_lastname
+				SELECT t_message_received.*, user.email AS user_email, user.firstname AS user_firstname, user.lastname AS user_lastname
 				FROM t_message_received
 				LEFT JOIN t_user user ON t_message_received.user_id = user.id
 				$where

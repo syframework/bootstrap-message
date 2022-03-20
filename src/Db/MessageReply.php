@@ -36,7 +36,7 @@ class MessageReply extends \Sy\Bootstrap\Db\Crud {
 			$where = 'AND t_message_reply.id > :last';
 		}
 		$sql = new Sql("
-			SELECT t_message_reply.*, t_user.firstname AS user_firstname, t_user.lastname AS user_lastname
+			SELECT t_message_reply.*, t_user.email AS user_email, t_user.firstname AS user_firstname, t_user.lastname AS user_lastname
 			FROM t_message_reply
 			LEFT JOIN t_user ON t_user.id = t_message_reply.user_id
 			WHERE
