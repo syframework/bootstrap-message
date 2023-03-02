@@ -13,16 +13,16 @@ class MessageReceived extends \Sy\Bootstrap\Service\Crud {
 	public function create(array $fields) {
 		$service = \Project\Service\Container::getInstance();
 
+		// Check fields
+		if (!isset($fields['user_id'])) $fields['user_id'] = $service->user->getCurrentUser()->id;
+		if (!isset($fields['ip'])) $fields['ip'] = sprintf("%u", ip2long($_SERVER['REMOTE_ADDR']));
+
 		// Dispatch an event before message creation
 		$service->event->dispatch(new Event('message.create', [
 			'itemId'   => $fields['item_id'],
 			'itemType' => $fields['item_type'],
-			'userId'   => $fields['user_id']
+			'userId'   => $fields['user_id'],
 		]));
-
-		// Check fields
-		if (!isset($fields['user_id'])) $fields['user_id'] = $service->user->getCurrentUser()->id;
-		if (!isset($fields['ip'])) $fields['ip'] = sprintf("%u", ip2long($_SERVER['REMOTE_ADDR']));
 
 		$id = parent::create($fields);
 
@@ -31,7 +31,7 @@ class MessageReceived extends \Sy\Bootstrap\Service\Crud {
 			'msgId'    => $id,
 			'itemId'   => $fields['item_id'],
 			'itemType' => $fields['item_type'],
-			'userId'   => $fields['user_id']
+			'userId'   => $fields['user_id'],
 		]));
 
 		return $id;
@@ -46,7 +46,7 @@ class MessageReceived extends \Sy\Bootstrap\Service\Crud {
 		$service->event->dispatch(new Event('message.read', [
 			'itemId'   => $res['item_id'],
 			'itemType' => $res['item_type'],
-			'userId'   => $res['user_id']
+			'userId'   => $res['user_id'],
 		]));
 
 		return $res;
@@ -57,7 +57,7 @@ class MessageReceived extends \Sy\Bootstrap\Service\Crud {
 		$service = \Project\Service\Container::getInstance();
 		$service->event->dispatch(new Event('message.read', [
 			'itemId'   => $parameters['item_id'],
-			'itemType' => $parameters['item_type']
+			'itemType' => $parameters['item_type'],
 		]));
 
 		return parent::retrieveAll($parameters);
@@ -72,7 +72,7 @@ class MessageReceived extends \Sy\Bootstrap\Service\Crud {
 			'msgId'    => $res['id'],
 			'itemId'   => $res['item_id'],
 			'itemType' => $res['item_type'],
-			'userId'   => $res['user_id']
+			'userId'   => $res['user_id'],
 		]));
 
 		$ret = parent::delete($pk);
@@ -82,7 +82,7 @@ class MessageReceived extends \Sy\Bootstrap\Service\Crud {
 			'msgId'    => $res['id'],
 			'itemId'   => $res['item_id'],
 			'itemType' => $res['item_type'],
-			'userId'   => $res['user_id']
+			'userId'   => $res['user_id'],
 		]));
 
 		// Delete pictures
