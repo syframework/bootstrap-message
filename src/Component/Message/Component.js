@@ -19,7 +19,7 @@
 					$('.sy-picture-input-hidden').val('');
 
 					$('#new-msg-modal').modal('hide');
-					$('#message-feed').load("{FEED_URL}", function () {
+					$('#message-feed').load("{FEED_URL}&ts=" + Date.now(), function () {
 						$('body').trigger('feed-loaded');
 					});
 				} else {
