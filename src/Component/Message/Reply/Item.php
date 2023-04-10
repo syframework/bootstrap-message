@@ -8,11 +8,10 @@ class Item extends \Sy\Component\WebComponent {
 	public function __construct($message) {
 		parent::__construct();
 		$this->message = $message;
-	}
 
-	public function __toString() {
-		$this->init();
-		return parent::__toString();
+		$this->mount(function () {
+			$this->init();
+		});
 	}
 
 	private function init() {
@@ -38,11 +37,11 @@ class Item extends \Sy\Component\WebComponent {
 
 		$this->setVars([
 			'ID'      => $message['id'],
-			'USER_IMG'=> \Sy\Bootstrap\Lib\Url::avatar($message['user_email']),
+			'USER_IMG' => \Sy\Bootstrap\Lib\Url::avatar($message['user_email']),
 			'USER_ID' => $message['user_id'],
 			'MESSAGE' => \Sy\Bootstrap\Lib\Str::convert($message['message']),
 			'DATE'    => $date->humanTimeDiff(),
-			'DATETIME'=> $date->timestamp(),
+			'DATETIME' => $date->timestamp(),
 			'CLASS'   => $class,
 			'AUTHOR'  => $author,
 		]);

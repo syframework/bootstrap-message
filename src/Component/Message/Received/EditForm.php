@@ -8,7 +8,7 @@ class EditForm extends \Sy\Bootstrap\Component\Form {
 
 		$this->setAttributes([
 			'id'     => 'edit-msg-form',
-			'action' => \Sy\Bootstrap\Lib\Url::build('api', 'message/update')
+			'action' => \Sy\Bootstrap\Lib\Url::build('api', 'message/update'),
 		]);
 		$this->addHidden(['name' => 'action', 'value' => 'update']); // to catch action in Api
 		$this->addHidden(['name' => 'message_id', 'value' => ''], ['required' => true]);
@@ -23,7 +23,7 @@ class EditForm extends \Sy\Bootstrap\Component\Form {
 			'name'        => 'message',
 			'required'    => 'required',
 			'maxlength'   => 2048,
-			'placeholder' => 'Your message'
+			'placeholder' => 'Your message',
 		], [
 			'validator' => function($value) {
 				$l = strlen($value);
@@ -36,7 +36,7 @@ class EditForm extends \Sy\Bootstrap\Component\Form {
 				}
 				$this->setError(sprintf($this->_("Text $m length of %d characters"), $n));
 				return false;
-			}
+			},
 		]);
 
 		$div = $this->addDiv(['class' => 'clearfix']);
@@ -45,19 +45,20 @@ class EditForm extends \Sy\Bootstrap\Component\Form {
 			'Send',
 			[
 				'type' => 'submit',
-				'class'=> 'float-end'
+				'class' => 'float-end',
 			],
 			[
 				'size'  => 'sm',
 				'color' => 'primary',
 				'icon'  => 'fas fa-paper-plane',
-			], $div
+			],
+			$div
 		);
 
 		$div->addElement(new \Sy\Bootstrap\Component\Form\Picture([
 			'name'  => 'picture',
 			'size'  => 'sm',
-			'title' => 'Choose picture'
+			'title' => 'Choose picture',
 		]));
 	}
 
@@ -95,31 +96,22 @@ class EditForm extends \Sy\Bootstrap\Component\Form {
 				}
 			}
 
-			$service->messageReceived->update([
-				'id' => $id
-			], [
-				'message' => $message
-			]);
-			$result = [
+			$service->messageReceived->update(['id' => $id], ['message' => $message]);
+			return [
 				'status'      => 'ok',
 				'message'     => \Sy\Bootstrap\Lib\Str::convert($message),
-				'message_raw' => $message
+				'message_raw' => $message,
 			];
-			echo json_encode($result);
-		} catch(\Sy\Bootstrap\Component\Form\CsrfException $e) {
+		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()];
-			echo json_encode($result);
-		} catch(\Sy\Component\Html\Form\Exception $e) {
+			return ['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()];
+		} catch (\Sy\Component\Html\Form\Exception $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
-			echo json_encode($result);
-		} catch(\Sy\Db\MySql\Exception $e) {
+			return ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
+		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => $this->_('Error')];
-			echo json_encode($result);
+			return ['status' => 'ko', 'message' => $this->_('Error')];
 		}
-		exit();
 	}
 
 }

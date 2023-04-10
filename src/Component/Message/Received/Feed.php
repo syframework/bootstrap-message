@@ -3,7 +3,14 @@ namespace Sy\Bootstrap\Component\Message\Received;
 
 class Feed extends \Sy\Bootstrap\Component\Feed {
 
+	/**
+	 * @var int
+	 */
 	private $itemId;
+
+	/**
+	 * @var string
+	 */
 	private $itemType;
 
 	public function __construct($itemId = null, $itemType = null) {

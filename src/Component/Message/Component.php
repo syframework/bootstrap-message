@@ -4,17 +4,17 @@ namespace Sy\Bootstrap\Component\Message;
 class Component extends \Sy\Component\WebComponent {
 
 	private $itemId;
+
 	private $itemType;
 
 	public function __construct($itemId, $itemType) {
 		parent::__construct();
 		$this->itemId = $itemId;
 		$this->itemType = $itemType;
-	}
 
-	public function __toString() {
-		$this->init();
-		return parent::__toString();
+		$this->mount(function () {
+			$this->init();
+		});
 	}
 
 	private function init() {
@@ -33,7 +33,7 @@ class Component extends \Sy\Component\WebComponent {
 				'message_item_type' => $this->itemType,
 				'last'        => 0,
 				'class'       => '\Sy\Bootstrap\Component\Message\Received\Feed',
-				'sy_language' => \Sy\Translate\LangDetector::getInstance()->getLang()
+				'sy_language' => \Sy\Translate\LangDetector::getInstance()->getLang(),
 			]));
 			$js->setBlock('NEW_BLOCK');
 			$this->setComponent('ADD_FORM', new \Sy\Bootstrap\Component\Message\Received\AddForm($this->itemId, $this->itemType));

@@ -29,11 +29,10 @@ class Item extends \Sy\Component\WebComponent {
 		$this->opened  = false;
 		$this->picture = true;
 		$this->share   = true;
-	}
 
-	public function __toString() {
-		$this->init();
-		return parent::__toString();
+		$this->mount(function () {
+			$this->init();
+		});
 	}
 
 	public function open() {
@@ -58,7 +57,7 @@ class Item extends \Sy\Component\WebComponent {
 		$author = $this->_(\Sy\Bootstrap\Lib\Str::convertName($message['user_firstname'] . ' ' . $message['user_lastname']));
 		$this->setVars([
 			'ID'             => $message['id'],
-			'PROFILE_IMG_SRC'=> \Sy\Bootstrap\Lib\Url::avatar($message['user_email']),
+			'PROFILE_IMG_SRC' => \Sy\Bootstrap\Lib\Url::avatar($message['user_email']),
 			'USER_ID'        => $message['user_id'],
 			'AUTHOR'         => $author,
 			'MESSAGE'        => \Sy\Bootstrap\Lib\Str::convert($message['message']),
@@ -85,7 +84,7 @@ class Item extends \Sy\Component\WebComponent {
 		}
 
 		// Edit message button
-		if ($user->id === $message['user_id'] and (int) $message['nb_reply'] === 0) {
+		if ($user->id === $message['user_id'] and (int)$message['nb_reply'] === 0) {
 			$this->setBlock('EDIT_BTN_BLOCK');
 		}
 
