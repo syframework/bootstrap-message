@@ -3,9 +3,10 @@ namespace Sy\Bootstrap\Component\Message\Received;
 
 class EditModal extends \Sy\Component\WebComponent {
 
-	public function __toString() {
-		$this->init();
-		return parent::__toString();
+	public function __construct() {
+		$this->mount(function () {
+			$this->init();
+		});
 	}
 
 	private function init() {

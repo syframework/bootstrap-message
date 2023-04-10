@@ -4,7 +4,9 @@ namespace Sy\Bootstrap\Component\Message\Received;
 class Page extends \Sy\Component\WebComponent {
 
 	private $page;
+
 	private $itemId;
+
 	private $itemType;
 
 	public function __construct($page, $itemId, $itemType) {
@@ -12,11 +14,10 @@ class Page extends \Sy\Component\WebComponent {
 		$this->page = $page;
 		$this->itemId = $itemId;
 		$this->itemType = $itemType;
-	}
 
-	public function __toString() {
-		$this->init();
-		return parent::__toString();
+		$this->mount(function () {
+			$this->init();
+		});
 	}
 
 	private function init() {
@@ -36,7 +37,7 @@ class Page extends \Sy\Component\WebComponent {
 		$service = \Project\Service\Container::getInstance();
 		try {
 			$messages = $service->messageReceived->retrieveAll(['last' => $this->page, 'item_id' => $this->itemId, 'item_type' => $this->itemType]);
-		} catch (\Sy\Bootstrap\Service\Crud\Exception $e) {
+		} catch (\Sy\Db\MySql\Exception $e) {
 			$messages = [];
 		}
 

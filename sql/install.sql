@@ -48,6 +48,6 @@ CREATE TABLE `t_message_reply` (
 -- View structure for v_message_received
 -- ----------------------------
 DROP VIEW IF EXISTS `v_message_received`;
-CREATE VIEW `v_message_received` AS select `t_message_received`.`id` AS `id`,`t_message_received`.`user_id` AS `user_id`,`t_user`.`firstname` AS `user_firstname`,`t_user`.`lastname` AS `user_lastname`,`t_message_received`.`item_id` AS `item_id`,`t_message_received`.`item_type` AS `item_type`,`t_message_received`.`message` AS `message`,`t_message_received`.`created_at` AS `created_at`,`t_message_received`.`updated_at` AS `updated_at`,`t_message_received`.`ip` AS `ip` from (`t_message_received` left join `t_user` on((`t_message_received`.`user_id` = `t_user`.`id`))) where ((`t_user`.`status` = 'active') and (`t_user`.`role` <> 'blacklisted')) ;
+CREATE VIEW `v_message_received` AS select `t_message_received`.`id` AS `id`,`t_message_received`.`user_id` AS `user_id`,`t_user`.`email` AS `user_email`,`t_user`.`firstname` AS `user_firstname`,`t_user`.`lastname` AS `user_lastname`,`t_message_received`.`item_id` AS `item_id`,`t_message_received`.`item_type` AS `item_type`,`t_message_received`.`message` AS `message`,`t_message_received`.`created_at` AS `created_at`,`t_message_received`.`updated_at` AS `updated_at`,`t_message_received`.`ip` AS `ip` from (`t_message_received` left join `t_user` on((`t_message_received`.`user_id` = `t_user`.`id`))) where ((`t_user`.`status` = 'active') and (`t_user`.`role` <> 'blacklisted')) ;
 
 SET FOREIGN_KEY_CHECKS=1;

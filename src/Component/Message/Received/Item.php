@@ -3,26 +3,36 @@ namespace Sy\Bootstrap\Component\Message\Received;
 
 class Item extends \Sy\Component\WebComponent {
 
+	/**
+	 * @var array
+	 */
 	private $message;
 
+	/**
+	 * @var bool
+	 */
 	private $opened;
 
+	/**
+	 * @var bool
+	 */
 	private $picture;
+
+	/**
+	 * @var bool
+	 */
+	private $share;
 
 	public function __construct($message) {
 		parent::__construct();
 		$this->message = $message;
 		$this->opened  = false;
 		$this->picture = true;
+		$this->share   = true;
 
-		// Update time periodically
-		$this->addJsLink(MOMENT_JS);
-		$this->addJsLink(WEB_ROOT . '/assets/js/time.js');
-	}
-
-	public function __toString() {
-		$this->init();
-		return parent::__toString();
+		$this->mount(function () {
+			$this->init();
+		});
 	}
 
 	public function open() {
@@ -33,6 +43,10 @@ class Item extends \Sy\Component\WebComponent {
 		$this->picture = false;
 	}
 
+	public function noShare() {
+		$this->share = false;
+	}
+
 	private function init() {
 		$this->addTranslator(LANG_DIR . '/bootstrap-message');
 		$this->setTemplateFile(__DIR__ . '/Item.html');
@@ -41,9 +55,10 @@ class Item extends \Sy\Component\WebComponent {
 		$message = $this->message;
 		$date = new \Sy\Bootstrap\Lib\Date($message['created_at']);
 		$author = $this->_(\Sy\Bootstrap\Lib\Str::convertName($message['user_firstname'] . ' ' . $message['user_lastname']));
-		$this->setComponent('PROFILE_IMG', new \Sy\Bootstrap\Component\User\ProfileImg($message['user_id']));
 		$this->setVars([
 			'ID'             => $message['id'],
+			'PROFILE_IMG_SRC' => \Sy\Bootstrap\Lib\Url::avatar($message['user_email']),
+			'USER_ID'        => $message['user_id'],
 			'AUTHOR'         => $author,
 			'MESSAGE'        => \Sy\Bootstrap\Lib\Str::convert($message['message']),
 			'MESSAGE_RAW'    => htmlentities($message['message'], ENT_COMPAT),
@@ -51,7 +66,6 @@ class Item extends \Sy\Component\WebComponent {
 			'DATETIME'       => $date->timestamp(),
 			'NB_REPLY'       => $message['nb_reply'],
 			'NEW'            => ($message['nb_reply'] > 0 ? '' : 'new'),
-			'URL'            => \Sy\Bootstrap\Lib\Url::build('page', 'user', ['id' => $message['user_id']]),
 			'CMT_BTN_HIDDEN' => $this->opened ? 'd-none' : '',
 			'CMT_DIV_HIDDEN' => $this->opened ? '' : 'style="display:none"',
 		]);
@@ -70,7 +84,7 @@ class Item extends \Sy\Component\WebComponent {
 		}
 
 		// Edit message button
-		if ($user->id === $message['user_id'] and (int) $message['nb_reply'] === 0) {
+		if ($user->id === $message['user_id'] and (int)$message['nb_reply'] === 0) {
 			$this->setBlock('EDIT_BTN_BLOCK');
 		}
 
@@ -80,7 +94,7 @@ class Item extends \Sy\Component\WebComponent {
 		}
 
 		// Share message button
-		if ($message['item_type'] !== 'reservation') {
+		if ($this->share) {
 			$shareBtn = new \Sy\Bootstrap\Component\Share\Button(
 				url: PROJECT_URL . WEB_ROOT . \Sy\Bootstrap\Lib\Url::build('page', 'message', ['id' => $message['id']]),
 				size: 'sm',

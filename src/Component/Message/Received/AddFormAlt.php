@@ -4,6 +4,7 @@ namespace Sy\Bootstrap\Component\Message\Received;
 class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 
 	private $itemId;
+
 	private $itemType;
 
 	/**
@@ -37,7 +38,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 			'name'        => 'message',
 			'required'    => 'required',
 			'maxlength'   => 2048,
-			'placeholder' => 'Envoyer un message'
+			'placeholder' => 'Envoyer un message',
 		], [
 			'validator' => function($value) {
 				$l = strlen($value);
@@ -50,14 +51,14 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 				}
 				$this->setError(sprintf($this->_("Text $m length of %d characters"), $n));
 				return false;
-			}
+			},
 		]);
 
 		// Email
 		$email = $this->addEmail([
 			'name'        => 'email',
 			'required'    => 'required',
-			'placeholder' => 'Your e-mail'
+			'placeholder' => 'Your e-mail',
 		])->getParent();
 		$d = $email->addDiv(['class' => 'account-ok']);
 		$d->addDiv(['class' => 'help-block'])->addText(
@@ -78,9 +79,9 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 		$this->addCheckbox([
 			'class' => 'account-checkbox',
 			'name'  => 'account',
-			'value' => 'yes'
+			'value' => 'yes',
 		], [
-			'label' => 'I already have an account'
+			'label' => 'I already have an account',
 		]);
 
 		// Submit button
@@ -93,13 +94,14 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 			'Sign up and send',
 			[
 				'type' => 'submit',
-				'class'=> 'float-end'
+				'class' => 'float-end',
 			],
 			[
 				'size'  => 'sm',
 				'color' => 'primary',
 				'icon'  => 'fas fa-paper-plane',
-			], $d1
+			],
+			$d1
 		);
 		$this->addButton(
 			'Sign in and send',
@@ -111,7 +113,8 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 				'size'  => 'sm',
 				'color' => 'primary',
 				'icon'  => 'fas fa-paper-plane',
-			], $d2
+			],
+			$d2
 		);
 
 		// JS
@@ -131,8 +134,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 				$service->user->signUp($email);
 				$success = ['title' => $this->_('Message not published yet'), 'message' => $this->_('Please activate your account to publish your message')];
 				$timeout = 0;
-			// Sign in
-			} else {
+			} else { // Sign in
 				$service->user->signIn($email, $this->post('password'));
 				$success = $this->_('You are connected and your message has been posted');
 				$timeout = 3500;
@@ -145,18 +147,18 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 				'item_id'   => $this->itemId,
 				'item_type' => $this->itemType,
 				'message'   => $this->post('message'),
-				'ip'        => sprintf("%u", ip2long($_SERVER['REMOTE_ADDR']))
+				'ip'        => sprintf("%u", ip2long($_SERVER['REMOTE_ADDR'])),
 			]);
 			$this->setSuccess($success, null, $timeout);
-		} catch(\Sy\Bootstrap\Component\Form\CsrfException $e) {
+		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
 			$this->setError($e->getMessage());
 			$this->fillOnError();
-		} catch(\Sy\Component\Html\Form\Exception $e) {
+		} catch (\Sy\Component\Html\Form\Exception $e) {
 			$this->logWarning($e);
 			$this->setError(is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error'));
 			$this->fillOnError();
-		} catch(\Sy\Bootstrap\Service\Crud\Exception $e) {
+		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
 			$this->setError($this->_('Error'));
 			$this->fillOnError();

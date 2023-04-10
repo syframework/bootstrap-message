@@ -20,7 +20,7 @@ class DeleteForm extends \Sy\Bootstrap\Component\Form {
 			'class'            => 'message-delete-form',
 			'data-message-id'  => $this->messageId,
 			'data-message-del' => $this->_('Are you sure to delete?'),
-			'action'           => \Sy\Bootstrap\Lib\Url::build('api', 'message/delete')
+			'action'           => \Sy\Bootstrap\Lib\Url::build('api', 'message/delete'),
 		]);
 
 		$this->addHidden(['name' => 'action', 'value' => 'delete']); // to catch action in Api
@@ -29,7 +29,8 @@ class DeleteForm extends \Sy\Bootstrap\Component\Form {
 		// Crsf check
 		$this->addCsrfField();
 
-		$this->addButton('',
+		$this->addButton(
+			'',
 			['type' => 'submit', 'title' => $this->_('Delete'), 'data-bs-title' => $this->_('Delete'), 'data-bs-container' => 'body'],
 			['color' => 'danger', 'size' => 'sm', 'icon' => 'fas fa-trash-alt fa-fw']
 		);
@@ -40,22 +41,17 @@ class DeleteForm extends \Sy\Bootstrap\Component\Form {
 		try {
 			$this->validatePost();
 			$service->messageReceived->delete(['id' => $this->messageId]);
-			$result = ['status' => 'ok', 'message' => $this->_('Deleted successfully')];
-			echo json_encode($result);
-		} catch(\Sy\Bootstrap\Component\Form\CsrfException $e) {
+			return ['status' => 'ok', 'message' => $this->_('Deleted successfully')];
+		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()];
-			echo json_encode($result);
-		} catch(\Sy\Component\Html\Form\Exception $e) {
+			return ['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()];
+		} catch (\Sy\Component\Html\Form\Exception $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
-			echo json_encode($result);
-		} catch(\Sy\Bootstrap\Service\Crud\Exception $e) {
+			return ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
+		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => $this->_('Error')];
-			echo json_encode($result);
+			return ['status' => 'ko', 'message' => $this->_('Error')];
 		}
-		exit();
 	}
 
 }

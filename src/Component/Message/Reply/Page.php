@@ -14,11 +14,10 @@ class Page extends \Sy\Component\WebComponent {
 		$this->messageId = $messageId;
 		$this->page      = $page;
 		$this->limit     = $limit;
-	}
 
-	public function __toString() {
-		$this->init();
-		return parent::__toString();
+		$this->mount(function () {
+			$this->init();
+		});
 	}
 
 	private function init() {

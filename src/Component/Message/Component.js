@@ -16,12 +16,10 @@
 				if (result.status === 'ok') {
 					// Reset form
 					$('#new-msg-textarea').val('');
-					$('.picture-input-hidden').val('');
-					$('.picture-div').html('');
-					SyFormPicture.pictures = {};
+					$('.sy-picture-input-hidden').val('');
 
 					$('#new-msg-modal').modal('hide');
-					$('#message-feed').load("{FEED_URL}", function () {
+					$('#message-feed').load("{FEED_URL}&ts=" + Date.now(), function () {
 						$('body').trigger('feed-loaded');
 					});
 				} else {

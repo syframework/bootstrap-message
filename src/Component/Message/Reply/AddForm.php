@@ -22,9 +22,8 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 		$this->setAttributes([
 			'class'           => 'message-reply-form',
 			'data-message-id' => $this->messageId,
-			'action'          => \Sy\Bootstrap\Lib\Url::build('api', 'message/createReply')
+			'action'          => \Sy\Bootstrap\Lib\Url::build('api', 'message/createReply'),
 		]);
-		$this->addHidden(['name' => 'action', 'value' => 'create']); // to catch action in Api
 		$this->addHidden(['name' => 'message_id', 'value' => $this->messageId, 'required' => 'required']);
 
 		// Anti spam check
@@ -38,20 +37,7 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			'id'          => 'reply-form-textarea-' . $this->messageId,
 			'required'    => 'required',
 			'maxlength'   => 2048,
-			'placeholder' => $this->_('Add an answer')
-		], [
-			'validator' => function($value) {
-				$l = strlen($value);
-				if ($l >= 2 and $l <= 2048) return true;
-				$m = 'max';
-				$n = 2048;
-				if ($l <= 2048) {
-					$m = 'min';
-					$n = 2;
-				}
-				$this->setError(sprintf($this->_("Text $m length of %d characters"), $n));
-				return false;
-			}
+			'placeholder' => $this->_('Add an answer'),
 		]);
 
 		$div = $this->addDiv(['class' => 'clearfix']);
@@ -61,20 +47,21 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			[
 				'id'   => 'reply-form-btn-' . $this->messageId,
 				'type' => 'submit',
-				'class'=> 'btn-reply float-end'
+				'class' => 'btn-reply float-end',
 			],
 			[
 				'size'  => 'sm',
 				'color' => 'primary',
 				'icon'  => 'fas fa-paper-plane',
-			], $div
+			],
+			$div
 		);
 
 		if ($this->picture) {
 			$div->addElement(new \Sy\Bootstrap\Component\Form\Picture([
 				'name'  => 'picture',
 				'size'  => 'sm',
-				'title' => 'Choose picture'
+				'title' => 'Choose picture',
 			]));
 		}
 	}
@@ -94,7 +81,7 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 				'user_id'    => $userId,
 				'message_id' => $messageId,
 				'message'    => $message,
-				'ip'         => sprintf("%u", ip2long($_SERVER['REMOTE_ADDR']))
+				'ip'         => sprintf("%u", ip2long($_SERVER['REMOTE_ADDR'])),
 			]);
 
 			// Save pictures
@@ -122,25 +109,20 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			}
 			$service->messageReply->update(['id' => $id], ['message' => $message]);
 
-			$result = [
+			return [
 				'status'   => 'ok',
 				'nb_reply' => $service->messageReply->count(['message_id' => $messageId]),
 			];
-			echo json_encode($result);
-		} catch(\Sy\Bootstrap\Component\Form\CsrfException $e) {
+		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()];
-			echo json_encode($result);
-		} catch(\Sy\Component\Html\Form\Exception $e) {
+			return ['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()];
+		} catch (\Sy\Component\Html\Form\Exception $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
-			echo json_encode($result);
-		} catch(\Sy\Bootstrap\Service\Crud\Exception $e) {
+			return ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
+		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => $this->_('Error')];
-			echo json_encode($result);
+			return ['status' => 'ko', 'message' => $this->_('Error')];
 		}
-		exit();
 	}
 
 }

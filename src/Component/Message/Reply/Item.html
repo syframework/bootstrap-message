@@ -3,23 +3,23 @@
 		<div class="tr">
 			<!-- BEGIN IMG_LEFT_BLOCK -->
 			<div class="td img">
-				{PROFILE_IMG}
+				<img src="{USER_IMG}" class="profile rounded-circle" alt="{AUTHOR}" data-user-id="{USER_ID}" />
 			</div>
 			<!-- END IMG_LEFT_BLOCK -->
 			<div class="td message">
 				<div>
 					<blockquote class="blockquote photoswipe-gallery text-start">{MESSAGE}</blockquote>
 					<footer class="blockquote-footer">
-						<a class="text-muted" href="{URL}">{AUTHOR}</a>, <span class="date" data-date="{DATETIME}">{DATE}</span>.
+						<span class="profile text-muted" data-user-id="{USER_ID}">{AUTHOR}</span>, <span class="date" data-date="{DATETIME}">{DATE}</span>.
 					</footer>
 					<div class="float-end ms-1">
-						{DEL_BTN_FORM}
+						{DEL_BTN_FORM/}
 					</div>
 				</div>
 			</div>
 			<!-- BEGIN IMG_RIGHT_BLOCK -->
 			<div class="td img">
-				{PROFILE_IMG}
+				<img src="{USER_IMG}" class="profile rounded-circle" alt="{AUTHOR}" data-user-id="{USER_ID}" />
 			</div>
 			<!-- END IMG_RIGHT_BLOCK -->
 		</div>

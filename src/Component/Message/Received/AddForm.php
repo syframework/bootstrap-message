@@ -3,7 +3,14 @@ namespace Sy\Bootstrap\Component\Message\Received;
 
 class AddForm extends \Sy\Bootstrap\Component\Form {
 
+	/**
+	 * @var int
+	 */
 	private $itemId;
+
+	/**
+	 * @var string
+	 */
 	private $itemType;
 
 	public function __construct($itemId, $itemType) {
@@ -16,10 +23,9 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 		parent::init();
 
 		$this->setAttributes([
-			'id'    => 'new-msg-form',
-			'action'=> \Sy\Bootstrap\Lib\Url::build('api', 'message/create')
+			'id'     => 'new-msg-form',
+			'action' => \Sy\Bootstrap\Lib\Url::build('api', 'message/create'),
 		]);
-		$this->addHidden(['name' => 'action', 'value' => 'create']); // to catch action in Api
 		$this->addHidden(['name' => 'item_id', 'value' => $this->itemId]);
 		$this->addHidden(['name' => 'item_type', 'value' => $this->itemType]);
 
@@ -34,20 +40,7 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			'id'          => 'new-msg-textarea',
 			'required'    => 'required',
 			'maxlength'   => 2048,
-			'placeholder' => 'Your message'
-		], [
-			'validator' => function($value) {
-				$l = strlen($value);
-				if ($l >= 2 and $l <= 2048) return true;
-				$m = 'max';
-				$n = 2048;
-				if ($l <= 2048) {
-					$m = 'min';
-					$n = 2;
-				}
-				$this->setError(sprintf($this->_("Text $m length of %d characters"), $n));
-				return false;
-			}
+			'placeholder' => 'Your message',
 		]);
 
 		$div = $this->addDiv(['class' => 'clearfix']);
@@ -55,21 +48,22 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 		$this->addButton(
 			'Send',
 			[
-				'id'   => 'new-msg-send-btn',
-				'type' => 'submit',
-				'class'=> 'float-end'
+				'id'    => 'new-msg-send-btn',
+				'type'  => 'submit',
+				'class' => 'float-end',
 			],
 			[
 				'size'  => 'sm',
 				'color' => 'primary',
 				'icon'  => 'fas fa-paper-plane',
-			], $div
+			],
+			$div
 		);
 
 		$div->addElement(new \Sy\Bootstrap\Component\Form\Picture([
 			'name'  => 'picture',
 			'size'  => 'sm',
-			'title' => 'Choose picture'
+			'title' => 'Choose picture',
 		]));
 	}
 
@@ -80,7 +74,7 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 
 			$user = $service->user->getCurrentUser();
 
-			if (!$user->isConnected()) throw new \Sy\Bootstrap\Service\Crud\Exception();
+			if (!$user->isConnected()) throw new \Sy\Db\MySql\Exception();
 
 			// Create message
 			$userId = $user->id;
@@ -118,22 +112,17 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			}
 			$service->messageReceived->update(['id' => $id], ['message' => $message]);
 
-			$result = ['status' => 'ok'];
-			echo json_encode($result);
-		} catch(\Sy\Bootstrap\Component\Form\CsrfException $e) {
+			return ['status' => 'ok'];
+		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()];
-			echo json_encode($result);
-		} catch(\Sy\Component\Html\Form\Exception $e) {
+			return ['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()];
+		} catch (\Sy\Component\Html\Form\Exception $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
-			echo json_encode($result);
-		} catch(\Sy\Bootstrap\Service\Crud\Exception $e) {
+			return ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
+		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
-			$result = ['status' => 'ko', 'message' => $this->_('Error')];
-			echo json_encode($result);
+			return ['status' => 'ko', 'message' => $this->_('Error')];
 		}
-		exit();
 	}
 
 }

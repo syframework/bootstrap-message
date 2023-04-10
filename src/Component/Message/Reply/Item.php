@@ -8,11 +8,10 @@ class Item extends \Sy\Component\WebComponent {
 	public function __construct($message) {
 		parent::__construct();
 		$this->message = $message;
-	}
 
-	public function __toString() {
-		$this->init();
-		return parent::__toString();
+		$this->mount(function () {
+			$this->init();
+		});
 	}
 
 	private function init() {
@@ -35,15 +34,16 @@ class Item extends \Sy\Component\WebComponent {
 
 		$date = new \Sy\Bootstrap\Lib\Date($message['created_at']);
 		$author = $this->_(\Sy\Bootstrap\Lib\Str::convertName($message['user_firstname'] . ' ' . $message['user_lastname']));
-		$this->setComponent('PROFILE_IMG', new \Sy\Bootstrap\Component\User\ProfileImg($message['user_id']));
+
 		$this->setVars([
 			'ID'      => $message['id'],
+			'USER_IMG' => \Sy\Bootstrap\Lib\Url::avatar($message['user_email']),
+			'USER_ID' => $message['user_id'],
 			'MESSAGE' => \Sy\Bootstrap\Lib\Str::convert($message['message']),
 			'DATE'    => $date->humanTimeDiff(),
-			'DATETIME'=> $date->timestamp(),
+			'DATETIME' => $date->timestamp(),
 			'CLASS'   => $class,
 			'AUTHOR'  => $author,
-			'URL'     => \Sy\Bootstrap\Lib\Url::build('page', 'user', ['id' => $message['user_id']]),
 		]);
 		if ($message['user_id'] === $sms['user_id']) {
 			$this->setBlock('IMG_LEFT_BLOCK');
