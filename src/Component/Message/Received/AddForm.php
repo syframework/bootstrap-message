@@ -84,7 +84,7 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 				'item_id'   => $this->itemId,
 				'item_type' => $this->itemType,
 				'message'   => $message,
-				'ip'        => sprintf("%u", ip2long($_SERVER['REMOTE_ADDR']))
+				'ip'        => sprintf("%u", ip2long($_SERVER['REMOTE_ADDR'])),
 			]);
 
 			// Save pictures
