@@ -17,10 +17,6 @@ class Feed extends \Sy\Bootstrap\Component\Feed {
 		parent::__construct();
 		$this->itemId = is_null($itemId) ? $this->get('message_item_id', '') : $itemId;
 		$this->itemType = is_null($itemType) ? $this->get('message_item_type', '') : $itemType;
-		// Update time periodically
-		$this->addJsLink(MOMENT_JS);
-		$this->addJsLink(WEB_ROOT . '/assets/js/time.js');
-		$this->addJsCode('$("body").on("feed-loaded.messagereceived", updateTime);');
 	}
 
 	public function getPage($n) {
