@@ -128,9 +128,5 @@
 				$(this).addClass('btn-success');
 			}
 		});
-
-		$('.date[data-date]').each(function() {
-			$(this).text(moment.unix($(this).data('date')).fromNow());
-		});
 	});
 })();
