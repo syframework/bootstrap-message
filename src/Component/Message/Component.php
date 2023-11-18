@@ -33,7 +33,7 @@ class Component extends \Sy\Component\WebComponent {
 				'message_item_type' => $this->itemType,
 				'last'        => 0,
 				'class'       => '\Sy\Bootstrap\Component\Message\Received\Feed',
-				'sy_language' => \Sy\Translate\LangDetector::getInstance()->getLang(),
+				'language'    => $service->lang->getLang(),
 			]));
 			$js->setBlock('NEW_BLOCK');
 			$this->setComponent('ADD_FORM', new \Sy\Bootstrap\Component\Message\Received\AddForm($this->itemId, $this->itemType));
