@@ -103,8 +103,8 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 				$picture = json_decode($picture, true);
 				foreach ($picture as $p) {
 					$img = imagecreatefromstring(base64_decode($p['image']));
-					$file = uniqid() . '.jpg';
-					if (imagejpeg($img, UPLOAD_DIR . "$dir/$file", 90)) {
+					$file = uniqid() . '.webp';
+					if (imagewebp($img, UPLOAD_DIR . "$dir/$file", 100)) {
 						@symlink(UPLOAD_DIR . "$dir/$file", UPLOAD_DIR . "$ldir/$file");
 						$message .= "\n" . PROJECT_URL . UPLOAD_ROOT . "$dir/$file" . (empty($p['caption']) ? '' : ' [' . str_replace(']', '', $p['caption']) . ']');
 					}
