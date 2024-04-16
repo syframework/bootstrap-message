@@ -32,7 +32,7 @@ class DeleteForm extends \Sy\Bootstrap\Component\Form {
 		$this->addButton(
 			'',
 			['type' => 'submit', 'title' => $this->_('Delete'), 'data-bs-title' => $this->_('Delete'), 'data-bs-container' => 'body'],
-			['color' => 'danger', 'size' => 'sm', 'icon' => 'fas fa-trash-alt fa-fw']
+			['color' => 'danger', 'size' => 'sm', 'icon' => 'trash']
 		);
 	}
 

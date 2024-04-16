@@ -50,7 +50,7 @@ class EditForm extends \Sy\Bootstrap\Component\Form {
 			[
 				'size'  => 'sm',
 				'color' => 'primary',
-				'icon'  => 'fas fa-paper-plane',
+				'icon'  => 'paper-plane',
 			],
 			$div
 		);
