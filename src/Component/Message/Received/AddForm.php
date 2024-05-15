@@ -14,17 +14,14 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 	private $itemType;
 
 	public function __construct($itemId, $itemType) {
+		parent::__construct();
 		$this->itemId = $itemId;
 		$this->itemType = $itemType;
-		parent::__construct();
 	}
 
 	public function init() {
-		parent::init();
-
 		$this->setAttributes([
-			'id'     => 'new-msg-form',
-			'action' => \Sy\Bootstrap\Lib\Url::build('api', 'message/create'),
+			'id' => 'new-msg-form',
 		]);
 		$this->addHidden(['name' => 'item_id', 'value' => $this->itemId]);
 		$this->addHidden(['name' => 'item_type', 'value' => $this->itemType]);
@@ -112,16 +109,16 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			}
 			$service->messageReceived->update(['id' => $id], ['message' => $message]);
 
-			return ['status' => 'ok'];
+			return json_encode(['status' => 'ok']);
 		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
-			return ['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()];
+			return json_encode(['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()]);
 		} catch (\Sy\Component\Html\Form\Exception $e) {
 			$this->logWarning($e);
-			return ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
+			return json_encode(['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')]);
 		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
-			return ['status' => 'ko', 'message' => $this->_('Error')];
+			return json_encode(['status' => 'ko', 'message' => $this->_('Error')]);
 		}
 	}
 

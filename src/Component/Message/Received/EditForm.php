@@ -4,11 +4,8 @@ namespace Sy\Bootstrap\Component\Message\Received;
 class EditForm extends \Sy\Bootstrap\Component\Form {
 
 	public function init() {
-		parent::init();
-
 		$this->setAttributes([
-			'id'     => 'edit-msg-form',
-			'action' => \Sy\Bootstrap\Lib\Url::build('api', 'message/update'),
+			'id' => 'edit-msg-form',
 		]);
 		$this->addHidden(['name' => 'action', 'value' => 'update']); // to catch action in Api
 		$this->addHidden(['name' => 'message_id', 'value' => ''], ['required' => true]);
@@ -97,20 +94,20 @@ class EditForm extends \Sy\Bootstrap\Component\Form {
 			}
 
 			$service->messageReceived->update(['id' => $id], ['message' => $message]);
-			return [
+			return json_encode([
 				'status'      => 'ok',
 				'message'     => \Sy\Bootstrap\Lib\Str::convert($message),
 				'message_raw' => $message,
-			];
+			]);
 		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
-			return ['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()];
+			return json_encode(['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()]);
 		} catch (\Sy\Component\Html\Form\Exception $e) {
 			$this->logWarning($e);
-			return ['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')];
+			return json_encode(['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')]);
 		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
-			return ['status' => 'ko', 'message' => $this->_('Error')];
+			return json_encode(['status' => 'ko', 'message' => $this->_('Error')]);
 		}
 	}
 
