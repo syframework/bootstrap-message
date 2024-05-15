@@ -13,15 +13,13 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 	private $div;
 
 	public function __construct($itemId, $itemType) {
+		parent::__construct();
 		$this->itemId = $itemId;
 		$this->itemType = $itemType;
 		$this->div = [];
-		parent::__construct();
 	}
 
 	public function init() {
-		parent::init();
-
 		$this->setOption('error-class', 'alert alert-danger mt-1');
 
 		$this->addHidden(['name' => 'item_id', 'value' => $this->itemId]);
@@ -170,7 +168,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 			$this->logWarning($e);
 			$this->setError($this->_('ID or password error'));
 			$this->fillOnError();
-		} catch (\Sy\Bootstrap\Lib\Crud\DuplicateEntryException $e) {
+		} catch (\Sy\Db\MySql\DuplicateEntryException $e) {
 			$this->logWarning($e);
 			$this->setError($this->_('Account already exists'));
 			$_POST['account'] = 'yes';
