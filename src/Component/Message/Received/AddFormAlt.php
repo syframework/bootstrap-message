@@ -7,16 +7,12 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 
 	private $itemType;
 
-	/**
-	 * @var array
-	 */
-	private $div;
+	private $checkbox;
 
 	public function __construct($itemId, $itemType) {
 		parent::__construct();
 		$this->itemId = $itemId;
 		$this->itemType = $itemType;
-		$this->div = [];
 	}
 
 	public function init() {
@@ -74,7 +70,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 		$password->addClass('account-ok');
 
 		// Checkbox
-		$this->addCheckbox([
+		$this->checkbox = $this->addCheckbox([
 			'class' => 'account-checkbox',
 			'name'  => 'account',
 			'value' => 'yes',
@@ -86,8 +82,6 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 		$div = $this->addDiv(['class' => 'clearfix']);
 		$d1 = $div->addDiv(['class' => 'account-ok']);
 		$d2 = $div->addDiv(['class' => 'account-ok', 'style' => 'display:none']);
-		$this->div['visible'] = [$d, $d1];
-		$this->div['hidden'] = [$password, $d2];
 		$this->addButton(
 			'Sign up and send',
 			[
@@ -116,7 +110,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 		);
 
 		// JS
-		$this->addJsCode(file_get_contents(__DIR__ . '/AddFormAlt.js'));
+		$this->addJsCode(__DIR__ . '/AddFormAlt.js');
 	}
 
 	public function submitAction() {
@@ -151,43 +145,33 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
 			$this->setError($e->getMessage());
-			$this->fillOnError();
+			$this->fill($_POST);
 		} catch (\Sy\Component\Html\Form\Exception $e) {
 			$this->logWarning($e);
 			$this->setError(is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error'));
-			$this->fillOnError();
+			$this->fill($_POST);
 		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
 			$this->setError($this->_('Error'));
-			$this->fillOnError();
+			$this->fill($_POST);
 		} catch (\Sy\Bootstrap\Service\User\ActivateAccountException $e) {
 			$this->logWarning($e);
 			$this->setError($this->_('Account not activated'));
-			$this->fillOnError();
+			$this->fill($_POST);
 		} catch (\Sy\Bootstrap\Service\User\SignInException $e) {
 			$this->logWarning($e);
 			$this->setError($this->_('ID or password error'));
-			$this->fillOnError();
-		} catch (\Sy\Db\MySql\DuplicateEntryException $e) {
+			$this->fill($_POST);
+		} catch (\Sy\Bootstrap\Service\User\AccountExistException $e) {
 			$this->logWarning($e);
 			$this->setError($this->_('Account already exists'));
-			$_POST['account'] = 'yes';
-			$this->fillOnError();
+			$this->fill($_POST);
+			$this->checkbox->setAttribute('checked', 'checked');
 		} catch (\Sy\Bootstrap\Service\User\SignUpException $e) {
 			$this->logWarning($e);
 			$this->setError($this->_('An error occured'));
-			$this->fillOnError();
+			$this->fill($_POST);
 		}
-	}
-
-	private function fillOnError() {
-		if ($this->post('account') === 'yes') {
-			$this->div['visible'][0]->setAttribute('hidden', 'hidden');
-			$this->div['visible'][1]->setAttribute('hidden', 'hidden');
-			$this->div['hidden'][0]->unsetAttribute('hidden');
-			$this->div['hidden'][1]->unsetAttribute('hidden');
-		}
-		$this->fill($_POST);
 	}
 
 }
