@@ -30,7 +30,7 @@
 			if (result.status === 'ok') {
 				// Reset form
 				document.getElementById('new-msg-textarea').value = '';
-				form.querySelectorAll('.sy-picture-input-hidden').forEach(el => el.value = '');
+				form.querySelector('.sy-picture-input-hidden').value = '';
 				modal.hide();
 				const feed = document.getElementById('message-feed');
 				feed.innerHTML = '<div class="d-flex justify-content-center"><div class="spinner-border"></div></div>';
@@ -49,8 +49,8 @@
 				if (result.csrf) {
 					form.querySelector('input[name="__csrf"]').value = result.csrf;
 				}
-				btn.removeAttribute('disabled');
 			}
+			btn.removeAttribute('disabled');
 		})
 		.catch(error => console.error('Error:', error));
 	});
