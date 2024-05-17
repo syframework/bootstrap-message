@@ -1,45 +1,61 @@
 (function() {
-	$('#edit-msg-form').submit(function(e) {
+
+	document.body.addEventListener('submit', e => {
+		const form = e.target.closest('#edit-msg-form');
+		if (!form) return;
 		e.preventDefault();
-		var id = $(this).find('input[name=message_id]').val();
-		var button = $(this).find('button[type=submit]');
-		button.attr('disabled', 'disabled');
-		$('#edit-msg-div').hide();
-		$.post(
-			$(this).attr('action'),
-			$(this).serialize(),
-			function(result) {
-				if (result.status === 'ok') {
-					// Reset form
-					$('.picture-input-hidden').val('');
-					$('.picture-div').html('');
 
-					$('#edit-msg-modal').modal('hide');
-					$('#message-' + id).find('.photoswipe-gallery').html(result.message);
-					$('#message-' + id).find('button[data-bs-target="#edit-msg-modal"]').data('message', result.message_raw);
-				} else {
-					$('#edit-msg-div').html(result.message);
-					$('#edit-msg-div').show();
-					if (result.csrf) {
-						$('#edit-msg-form input[name="__csrf"]').val(result.csrf);
-					}
+		const id = form.querySelector('input[name=message_id]').value;
+
+		const btn = form.querySelector('button[type=submit]');
+		btn.setAttribute('disabled', 'disabled');
+
+		const div = document.getElementById('edit-msg-div');
+		div.style.display = 'none';
+
+		fetch(form.getAttribute('action'), {
+			method: 'POST',
+			body: new FormData(form)
+		})
+		.then(response => response.json())
+		.then(result => {
+			if (result.status === 'ok') {
+				// Reset form
+				form.querySelector('.sy-picture-input-hidden').value = '';
+
+				const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit-msg-modal'));
+				modal.hide();
+
+				document.querySelector('#message-' + id + ' blockquote.blockquote').innerHTML = result.message;
+				document.querySelector('#message-' + id + ' button[data-message]').dataset.message = result.message_raw;
+			} else {
+				div.innerHTML = result.message;
+				div.style.display = '';
+				if (result.csrf) {
+					form.querySelector('input[name="__csrf"]').value = result.csrf;
 				}
-				button.removeAttr('disabled');
-			},
-			'json'
-		);
+			}
+			btn.removeAttribute('disabled');
+		})
+		.catch(error => console.error('Error:', error));
 	});
 
-	$('#edit-msg-modal').on('show.bs.modal', function (e) {
-		if (e.relatedTarget === undefined) return;
+	document.body.addEventListener('show.bs.modal', e => {
+		const modal = e.target.closest('#edit-msg-modal');
+		if (!modal) return;
 
-		var button = $(e.relatedTarget);
+		const button = e.relatedTarget;
+		if (!button) return;
 
-		$(this).find('input[name=message_id]').val(button.data('message-id'));
-		$(this).find('textarea[name=message]').val(button.data('message'));
+		modal.querySelector('input[name=message_id]').value = button.dataset.messageId;
+		modal.querySelector('textarea[name=message]').value = button.dataset.message;
+		modal.querySelector('.sy-picture-input-hidden').value = '';
 	});
 
-	$('#edit-msg-modal').on('shown.bs.modal', function (e) {
-		$(this).find('textarea').change();
+	document.body.addEventListener('shown.bs.modal', e => {
+		const modal = e.target.closest('#edit-msg-modal');
+		if (!modal) return;
+		modal.querySelector('textarea[name=message]').focus();
 	});
+
 })();

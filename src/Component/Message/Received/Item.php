@@ -67,7 +67,7 @@ class Item extends \Sy\Component\WebComponent {
 			'NB_REPLY'       => $message['nb_reply'],
 			'NEW'            => ($message['nb_reply'] > 0 ? '' : 'new'),
 			'CMT_BTN_HIDDEN' => $this->opened ? 'd-none' : '',
-			'CMT_DIV_HIDDEN' => $this->opened ? '' : 'style="display:none"',
+			'OPENED'         => $this->opened ? 'opened' : '',
 		]);
 		$feed = new \Sy\Bootstrap\Component\Message\Reply\Feed($message['id']);
 		$feed->setLast(null); // Force to not load the first page
