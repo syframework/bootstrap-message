@@ -142,3 +142,16 @@
 		}
 	}
 }
+
+.message-item {
+	.comment-form {
+		overflow: hidden;
+		transition: max-height 0.5s ease-out;
+		max-height: 0;
+	}
+
+	&.opened .comment-form {
+		max-height: 10000px;
+		transition: max-height 0.5s ease-in;
+	}
+}
