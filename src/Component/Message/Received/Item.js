@@ -1,93 +1,17 @@
 (function() {
 
-	document.body.addEventListener('submit', e => {
+	document.body.addEventListener('submitted.syform', e => {
 		const form = e.target.closest('.message-reply-form');
 		if (!form) return;
-		e.preventDefault();
 
-		const btn = form.querySelector('.btn-reply');
-		btn.setAttribute('disabled', 'disabled');
-
-		const id = form.dataset.messageId;
-		const alert = document.getElementById('reply-alert-div-' + id);
-		alert.style.display = 'none';
-
-		fetch(form.getAttribute('action'), {
-			method: 'POST',
-			body: new FormData(form),
-		})
-		.then(response => response.json())
-		.then(result => {
-			if (result.status === 'ok') {
-				form.querySelector('textarea').value = '';
-				form.querySelector('.sy-picture-input-hidden').value = '';
-				document.getElementById('message-' + id).classList.remove('new');
-				document.querySelector('#reply-feed-div-' + id + ' .feed-next-page-button').click();
-				document.getElementById('reply-nb-' + id).innerHTML = result.nb_reply;
-			} else {
-				alert.innerHTML = result.message;
-				alert.style.display = '';
-				if (result.csrf) {
-					form.querySelector('input[name="__csrf"]').value = result.csrf;
-				}
-			}
-			btn.removeAttribute('disabled');
-		})
-		.catch(error => console.log('Error: ', error));
-	});
-
-	document.body.addEventListener('submit', e => {
-		const form = e.target.closest('.message-delete-form');
-		if (!form) return;
-		e.preventDefault();
-
-		if (!confirm(form.dataset.messageDel)) return;
+		const data = e.detail;
+		if (!data.ok) return;
 
 		const id = form.dataset.messageId;
-		fetch(form.getAttribute('action'), {
-			method: 'POST',
-			body: new FormData(form),
-		})
-		.then(response => response.json())
-		.then(result => {
-			if (result.status === 'ok') {
-				document.getElementById('message-' + id).style.display = 'none';
-				flash(result.message, 'success');
-			} else {
-				flash(result.message, 'danger');
-				if (result.csrf) {
-					document.querySelectorAll('input[name="__csrf"]').forEach(input => input.value = result.csrf);
-				}
-			}
-		})
-		.catch(error => console.log('Error: ', error));
-	});
-
-	document.body.addEventListener('submit', e => {
-		const form = e.target.closest('.reply-delete-form');
-		if (!form) return;
-		e.preventDefault();
-
-		if (!confirm(form.dataset.messageDel)) return;
-
-		const id = form.dataset.messageId;
-		fetch(form.getAttribute('action'), {
-			method: 'POST',
-			body: new FormData(form),
-		})
-		.then(response => response.json())
-		.then(result => {
-			if (result.status === 'ok') {
-				document.getElementById('reply-' + id).style.display = 'none';
-				flash(result.message, 'success');
-			} else {
-				flash(result.message, 'danger');
-				if (result.csrf) {
-					document.querySelectorAll('input[name="__csrf"]').forEach(input => input.value = result.csrf);
-				}
-			}
-		})
-		.catch(error => console.log('Error: ', error));
+		form.querySelector('.sy-picture-input-hidden').value = '';
+		document.getElementById('message-' + id).classList.remove('new');
+		document.querySelector('#reply-feed-div-' + id + ' .feed-next-page-button').click();
+		document.getElementById('reply-nb-' + id).innerHTML = data.custom.nb_reply;
 	});
 
 	document.body.addEventListener('click', e => {

@@ -106,19 +106,18 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			}
 			$service->messageReply->update(['id' => $id], ['message' => $message]);
 
-			return json_encode([
-				'status'   => 'ok',
+			return $this->jsonSuccess('Message sent', custom: [
 				'nb_reply' => $service->messageReply->count(['message_id' => $messageId]),
 			]);
 		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
-			return json_encode(['status' => 'ko', 'message' => $e->getMessage(), 'csrf' => $service->user->getCsrfToken()]);
+			return $this->jsonError($e->getMessage());
 		} catch (\Sy\Component\Html\Form\Exception $e) {
 			$this->logWarning($e);
-			return json_encode(['status' => 'ko', 'message' => is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error')]);
+			return $this->jsonError($this->getOption('error') ?? $this->_('Please fill the form correctly'));
 		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
-			return json_encode(['status' => 'ko', 'message' => $this->_('Error')]);
+			return $this->jsonError('Database error');
 		}
 	}
 
