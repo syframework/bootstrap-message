@@ -16,6 +16,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 	}
 
 	public function init() {
+		$this->setAttribute('id', 'new-msg-form-alt');
 		$this->setOption('error-class', 'alert alert-danger mt-1');
 
 		$this->addHidden(['name' => 'item_id', 'value' => $this->itemId]);
@@ -125,11 +126,11 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 			if (is_null($this->post('account'))) {
 				$service->user->signUp($email);
 				$success = ['title' => $this->_('Message not published yet'), 'message' => $this->_('Please activate your account to publish your message')];
-				$timeout = 0;
+				$autohide = false;
 			} else { // Sign in
 				$service->user->signIn($email, $this->post('password'));
 				$success = $this->_('You are connected and your message has been posted');
-				$timeout = 3500;
+				$autohide = true;
 			}
 
 			// Create message
@@ -141,36 +142,29 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 				'message'   => $this->post('message'),
 				'ip'        => sprintf("%u", ip2long($_SERVER['REMOTE_ADDR'])),
 			]);
-			$this->setSuccess($success, null, $timeout);
+
+			return $this->jsonSuccess($success, ['autohide' => $autohide, 'redirection' => $_SERVER['REQUEST_URI']]);
 		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
-			$this->setError($e->getMessage());
-			$this->fill($_POST);
+			return $this->jsonError($e->getMessage());
 		} catch (\Sy\Component\Html\Form\Exception $e) {
 			$this->logWarning($e);
-			$this->setError(is_null($this->getOption('error')) ? $this->_('Please fill the form correctly') : $this->getOption('error'));
-			$this->fill($_POST);
+			return $this->jsonError($this->getOption('error') ?? 'Please fill the form correctly');
 		} catch (\Sy\Db\MySql\Exception $e) {
 			$this->logWarning($e);
-			$this->setError($this->_('Error'));
-			$this->fill($_POST);
+			return $this->jsonError('Database error');
 		} catch (\Sy\Bootstrap\Service\User\ActivateAccountException $e) {
 			$this->logWarning($e);
-			$this->setError($this->_('Account not activated'));
-			$this->fill($_POST);
+			return $this->jsonError('Account not activated');
 		} catch (\Sy\Bootstrap\Service\User\SignInException $e) {
 			$this->logWarning($e);
-			$this->setError($this->_('ID or password error'));
-			$this->fill($_POST);
+			return $this->jsonError('ID or password error');
 		} catch (\Sy\Bootstrap\Service\User\AccountExistException $e) {
 			$this->logWarning($e);
-			$this->setError($this->_('Account already exists'));
-			$this->fill($_POST);
-			$this->checkbox->setAttribute('checked', 'checked');
+			return $this->jsonError('Account already exists', ['account' => true]);
 		} catch (\Sy\Bootstrap\Service\User\SignUpException $e) {
 			$this->logWarning($e);
-			$this->setError($this->_('An error occured'));
-			$this->fill($_POST);
+			return $this->jsonError('An error occured');
 		}
 	}
 
