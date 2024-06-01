@@ -14,6 +14,10 @@
 		checkbox.dispatchEvent(new Event('change'));
 	});
 
+	document.querySelector('#new-msg-form-alt .account-checkbox').addEventListener('click', e => {
+		e.target.dispatchEvent(new Event('change'));
+	});
+
 	document.querySelector('#new-msg-form-alt .account-checkbox').addEventListener('change', e => {
 		e.target.form.querySelectorAll('.account-ok').forEach(function (accountOk) {
 			accountOk.style.display = accountOk.style.display === 'none' ? '' : 'none';
