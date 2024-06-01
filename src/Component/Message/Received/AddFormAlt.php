@@ -143,7 +143,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 				'ip'        => sprintf("%u", ip2long($_SERVER['REMOTE_ADDR'])),
 			]);
 
-			return $this->jsonSuccess($success, ['autohide' => $autohide, 'redirection' => $_SERVER['REQUEST_URI']]);
+			return $this->jsonSuccess($success, ['autohide' => $autohide]);
 		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
 			return $this->jsonError($e->getMessage());
