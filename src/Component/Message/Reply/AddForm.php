@@ -49,7 +49,7 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			[
 				'size'  => 'sm',
 				'color' => 'primary',
-				'icon'  => 'paper-plane',
+				'icon'  => 'send',
 			],
 			$div
 		);
