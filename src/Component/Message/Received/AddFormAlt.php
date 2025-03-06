@@ -16,7 +16,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 	}
 
 	public function init() {
-		$this->setAttribute('id', 'new-msg-form-alt');
+		$this->addClass('sy-new-msg-form-alt');
 		$this->setOption('error-class', 'alert alert-danger mt-1');
 
 		$this->addHidden(['name' => 'item_id', 'value' => $this->itemId]);
@@ -92,7 +92,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 			[
 				'size'  => 'sm',
 				'color' => 'primary',
-				'icon'  => 'paper-plane',
+				'icon'  => 'send',
 			],
 			$d1
 		);
@@ -105,7 +105,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 			[
 				'size'  => 'sm',
 				'color' => 'primary',
-				'icon'  => 'paper-plane',
+				'icon'  => 'send',
 			],
 			$d2
 		);
@@ -126,11 +126,11 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 			if (is_null($this->post('account'))) {
 				$service->user->signUp($email);
 				$success = ['title' => $this->_('Message not published yet'), 'message' => $this->_('Please activate your account to publish your message')];
-				$autohide = false;
+				$options = ['autohide' => false];
 			} else { // Sign in
 				$service->user->signIn($email, $this->post('password'));
 				$success = $this->_('You are connected and your message has been posted');
-				$autohide = true;
+				$options = ['redirection' => $_SERVER['REQUEST_URI']];
 			}
 
 			// Create message
@@ -143,7 +143,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 				'ip'        => sprintf("%u", ip2long($_SERVER['REMOTE_ADDR'])),
 			]);
 
-			return $this->jsonSuccess($success, ['autohide' => $autohide]);
+			return $this->jsonSuccess($success, $options);
 		} catch (\Sy\Bootstrap\Component\Form\CsrfException $e) {
 			$this->logWarning($e);
 			return $this->jsonError($e->getMessage());
@@ -161,7 +161,7 @@ class AddFormAlt extends \Sy\Bootstrap\Component\Form {
 			return $this->jsonError('ID or password error');
 		} catch (\Sy\Bootstrap\Service\User\AccountExistException $e) {
 			$this->logWarning($e);
-			return $this->jsonError('Account already exists', ['account' => true]);
+			return $this->jsonError('Account already exists', custom: ['account' => true]);
 		} catch (\Sy\Bootstrap\Service\User\SignUpException $e) {
 			$this->logWarning($e);
 			return $this->jsonError('An error occured');

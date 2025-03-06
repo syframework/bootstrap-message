@@ -4,9 +4,7 @@ namespace Sy\Bootstrap\Component\Message\Received;
 class EditForm extends \Sy\Bootstrap\Component\Form {
 
 	public function init() {
-		$this->setAttributes([
-			'id' => 'edit-msg-form',
-		]);
+		$this->addClass('sy-edit-msg-form');
 		$this->addHidden(['name' => 'message_id', 'value' => ''], ['required' => true]);
 
 		// Anti spam check
@@ -46,7 +44,7 @@ class EditForm extends \Sy\Bootstrap\Component\Form {
 			[
 				'size'  => 'sm',
 				'color' => 'primary',
-				'icon'  => 'paper-plane',
+				'icon'  => 'send',
 			],
 			$div
 		);

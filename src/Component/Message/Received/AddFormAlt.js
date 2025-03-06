@@ -1,35 +1,29 @@
 (function () {
 
 	document.body.addEventListener('submitted.syform', e => {
-		const form = e.target.closest('#new-msg-form-alt');
-		if (!form) return;
+		const form = e.target;
+		if (!form.classList.contains('sy-new-msg-form-alt')) return;
 
 		const data = e.detail;
-		if (!data.account) return;
+		if (data.ok) return;
+		if (!data.custom.account) return;
 
 		const checkbox = form.querySelector('.account-checkbox');
 		if (!checkbox) return;
 
 		checkbox.checked = true;
-		checkbox.dispatchEvent(new Event('change'));
+		checkbox.dispatchEvent(new Event('change', { bubbles: true }));
 	});
 
-	document.querySelector('#new-msg-form-alt .account-checkbox').addEventListener('click', e => {
-		e.target.dispatchEvent(new Event('change'));
-	});
+	document.body.addEventListener('change', e => {
+		if (!e.target.classList.contains('account-checkbox')) return;
+		const form = e.target.form;
+		if (!form) return;
+		if (!form.classList.contains('sy-new-msg-form-alt')) return;
 
-	document.querySelector('#new-msg-form-alt .account-checkbox').addEventListener('change', e => {
-		e.target.form.querySelectorAll('.account-ok').forEach(function (accountOk) {
-			accountOk.style.display = accountOk.style.display === 'none' ? '' : 'none';
-		});
-	});
-
-	document.addEventListener('DOMContentLoaded', () => {
-		document.querySelectorAll('#new-msg-form-alt .account-checkbox').forEach(checkbox => {
-			if (!checkbox.checked) return;
-			checkbox.form.querySelectorAll('.account-ok').forEach(function (accountOk) {
-				accountOk.style.display = accountOk.style.display === 'none' ? '' : 'none';
-			});
+		const accountOkElements = form.querySelectorAll('.account-ok');
+		accountOkElements.forEach(element => {
+			element.style.display = element.style.display === 'none' ? '' : 'none';
 		});
 	});
 

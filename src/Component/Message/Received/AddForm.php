@@ -20,9 +20,7 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 	}
 
 	public function init() {
-		$this->setAttributes([
-			'id' => 'new-msg-form',
-		]);
+		$this->addClass('sy-new-msg-form');
 		$this->addHidden(['name' => 'item_id', 'value' => $this->itemId]);
 		$this->addHidden(['name' => 'item_type', 'value' => $this->itemType]);
 
@@ -52,7 +50,7 @@ class AddForm extends \Sy\Bootstrap\Component\Form {
 			[
 				'size'  => 'sm',
 				'color' => 'primary',
-				'icon'  => 'paper-plane',
+				'icon'  => 'send',
 			],
 			$div
 		);
