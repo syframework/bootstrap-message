@@ -44,7 +44,7 @@ class MessageReceived extends \Sy\Bootstrap\Db\Crud {
 			) AS message
 			LEFT JOIN t_message_reply reply ON message.id = reply.message_id
 			GROUP BY message.id
-			ORDER BY NULL
+			ORDER BY message.created_at DESC
 		", $params);
 		return $this->db->queryAll($sql, \PDO::FETCH_ASSOC);
 	}
