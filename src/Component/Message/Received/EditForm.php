@@ -3,9 +3,19 @@ namespace Sy\Bootstrap\Component\Message\Received;
 
 class EditForm extends \Sy\Bootstrap\Component\Form {
 
+	/**
+	 * @param int $messageId
+	 */
+	private $messageId;
+
+	public function __construct($messageId = null) {
+		parent::__construct();
+		$this->messageId = $messageId;
+	}
+
 	public function init() {
 		$this->addClass('sy-edit-msg-form');
-		$this->addHidden(['name' => 'message_id', 'value' => ''], ['required' => true]);
+		$this->addHidden(['name' => 'message_id', 'value' => $this->messageId ?? ''], ['required' => true]);
 
 		// Anti spam check
 		$this->addAntiSpamField();
@@ -13,7 +23,7 @@ class EditForm extends \Sy\Bootstrap\Component\Form {
 		// Crsf check
 		$this->addCsrfField();
 
-		$this->addTextarea([
+		$textarea = $this->addTextarea([
 			'name'        => 'message',
 			'required'    => 'required',
 			'maxlength'   => 2048,
@@ -32,6 +42,14 @@ class EditForm extends \Sy\Bootstrap\Component\Form {
 				return false;
 			},
 		]);
+
+		if (!is_null($this->messageId)) {
+			$service = \Project\Service\Container::getInstance();
+			$message = $service->messageReceived->retrieve(['id' => $this->messageId]);
+			if ($message) {
+				$textarea->setContent($message['message']);
+			}
+		}
 
 		$div = $this->addDiv(['class' => 'clearfix']);
 

@@ -85,7 +85,16 @@ class Item extends \Sy\Component\WebComponent {
 
 		// Edit message button
 		if ($user->id === $message['user_id'] and (int)$message['nb_reply'] === 0) {
-			$this->setBlock('EDIT_BTN_BLOCK');
+			$editBtn = new \Sy\Bootstrap\Component\Modal\Button(
+				id: 'edit-msg-modal-' . $message['id'],
+				icon: 'pencil',
+				color: 'info',
+				size: 'sm',
+				width: 'auto',
+				title: 'Edit message',
+			);
+			$editBtn->getDialog()->setBody(new \Sy\Bootstrap\Component\Message\Received\EditForm($message['id']));
+			$this->setVar('EDIT_BTN', $editBtn);
 		}
 
 		// Delete button for administrator
