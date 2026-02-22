@@ -48,14 +48,6 @@ class Component extends \Sy\Component\WebComponent {
 
 			// Add form into the modal dialog
 			$addNewMsgBtn->getDialog()->setBody(new Received\AddForm($this->itemId, $this->itemType));
-
-			// Edit message modal
-			$editMsgDialog = new Dialog(
-				id: 'edit-msg-modal',
-				title: strval(new Icon('pencil')) . ' ' . $this->_('Edit message'),
-				body: new Received\EditForm()
-			);
-			$this->setVar('EDIT_MSG_MODAL', $editMsgDialog);
 		} else {
 			$addNewMsgBtn->getDialog()->setBody(new Received\AddFormAlt($this->itemId, $this->itemType));
 		}

@@ -1,6 +1,25 @@
 (function() {
 
 	document.body.addEventListener('submitted.syform', e => {
+		const form = e.target;
+		if (!form.classList.contains('sy-edit-msg-form')) return;
+
+		const data = e.detail;
+		if (!data.ok) return;
+
+		const id = form.querySelector('input[name=message_id]').value;
+		form.querySelector('.sy-picture-input-hidden').value = '';
+		document.querySelector('#message-' + id + ' blockquote.blockquote').innerHTML = data.custom.message;
+		form.querySelector('textarea[name=message]').innerText = data.custom.message_raw;
+	});
+
+	document.body.addEventListener('shown.bs.modal', e => {
+		const form = e.target.querySelector('.sy-edit-msg-form');
+		if (!form) return;
+		form.querySelector('textarea[name=message]').focus();
+	});
+
+	document.body.addEventListener('submitted.syform', e => {
 		const form = e.target.closest('.message-reply-form');
 		if (!form) return;
 
